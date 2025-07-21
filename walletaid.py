@@ -208,7 +208,7 @@ with open(wallet_filename, "rb") as wallet:
     pub = wallet_data[kindex + offsets[0]: kindex + offsets[1]]
     priv = wallet_data[vindex + offsets[2]: vindex + offsets[3]]
     while True:
-        if pub[0] != b"\x04":
+        if pub[0] != 4:
             pub = pub[:33]
         if pub not in keylist and kindex != -1:
             keylist[pub] = priv
@@ -233,7 +233,7 @@ with open("DUMP.txt", "w") as dump:
         print(procinfo, end="\r")
 
         comp = True
-        if pub_key[0] == b"\x04":
+        if pub_key[0] == 4:
             comp = False
 
         address = pubtoaddr(pub_key)
