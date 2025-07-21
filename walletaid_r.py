@@ -1,4 +1,4 @@
-import os.path, binascii, collections, getpass, argparse, hashlib, struct
+import os.path, binascii, collections, getpass, argparse, hashlib, struct, json
 
 # Get command-line arguments
 parser = argparse.ArgumentParser("walletaid.py",
@@ -160,7 +160,8 @@ with open(wallet_filename, "rb") as wallet:
             break
 
 
-with open("DUMP_R.txt", "w") as dump:
+try:
+    records = []
     klist_len = len(keylist)
     iters = 0
 
@@ -174,7 +175,10 @@ with open("DUMP_R.txt", "w") as dump:
 
         wif = privtowif(priv_key, comp)
 
-        dump.write("Address: {}\nWIF: {}\n\n".format(address, wif))
+        records.append({"address": address, "wif": wif})
         if iters >= klist_len:
             print(" " * len(procinfo))
             print("{} private keys found\n\nsaved to DUMP_R.txt".format(klist_len))
+finally:
+    with open("DUMP_R.txt", "w") as dump:
+        json.dump(records, dump, indent=2)
